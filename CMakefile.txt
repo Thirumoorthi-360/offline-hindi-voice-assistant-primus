@@ -1,0 +1,58 @@
+# ============================================================
+#  PRIMUS AI v2.0 — Makefile
+#  Builds the enhanced Hindi AI for Raspberry Pi
+# ============================================================
+
+CXX      = g++
+CXXFLAGS = -std=c++17 -O2 -Wall
+LIBS     = -lsqlite3
+
+TARGET   = hindi_ai
+DB_FILE  = knowledge.db
+SQL_FILE = seed_knowledge.sql
+
+SRCS = main.cpp \
+       hindi_ai.cpp \
+       intelligence.cpp \
+       enhancer.cpp \
+       performer.cpp \
+       tts.cpp
+
+OBJS = $(SRCS:.cpp=.o)
+
+# ─── BUILD ────────────────────────────────────────────────────
+all: $(TARGET) db
+
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
+	@echo "✅ Build successful: $(TARGET)"
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+# ─── DATABASE ─────────────────────────────────────────────────
+db: $(DB_FILE)
+
+$(DB_FILE): $(SQL_FILE)
+	@echo "🗄️  Seeding knowledge database..."
+	sqlite3 $(DB_FILE) < $(SQL_FILE)
+	@echo "✅ Database ready: $(DB_FILE)"
+	@sqlite3 $(DB_FILE) "SELECT COUNT(*) || ' entries loaded.' FROM knowledge;"
+
+# ─── CLEAN ────────────────────────────────────────────────────
+clean:
+	rm -f $(OBJS) $(TARGET) $(DB_FILE)
+	@echo "🧹 Cleaned."
+
+# ─── COUNT DB ─────────────────────────────────────────────────
+count:
+	@sqlite3 $(DB_FILE) "SELECT category, COUNT(*) as cnt FROM knowledge GROUP BY category ORDER BY cnt DESC;"
+
+# ─── RUN ──────────────────────────────────────────────────────
+run: all
+	./$(TARGET)
+
+voice: all
+	python3 voice_listener.py
+
+.PHONY: all db clean count run voice
