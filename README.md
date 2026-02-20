@@ -28,7 +28,7 @@ User Speech
 ↓  
 Speech-to-Text Engine  
 ↓  
-Smart system logics (Indent, Fuzzi , TF-IDF)  
+NLP & Logics  
 ↓  
 Response Generation  
 ↓  
