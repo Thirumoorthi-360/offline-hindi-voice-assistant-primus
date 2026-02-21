@@ -1,0 +1,20 @@
+[Unit]
+Description=PRIMUS AI — Offline Hindi Voice Assistant
+After=sound.target
+Wants=sound.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/primus/ml
+ExecStart=/usr/bin/python3 /home/pi/primus/ml/voice_listener.py
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Audio access
+SupplementaryGroups=audio
+
+[Install]
+WantedBy=multi-user.target
