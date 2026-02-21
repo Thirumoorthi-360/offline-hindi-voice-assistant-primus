@@ -178,6 +178,30 @@ Qwen Reasoning Engine
 eSpeak-NG (TTS)
     ↓
 Audio Output
+## To make it fully offline assitant 
+cp primus.service /home/pi/primus/ml/
+cp install_service.sh /home/pi/primus/ml/
+cd /home/pi/primus/ml
+sudo bash install_service.sh
+
+
+## Use full commands after install
+  journalctl -u primus -f
+
+# Stop
+sudo systemctl stop primus
+
+# Restart
+sudo systemctl restart primus
+
+# Disable autostart
+sudo systemctl disable primus
+
+# Check status
+sudo systemctl status primus
+## Wrap the entire system with the files 
+  Primus
+  Install service
 
 
 
